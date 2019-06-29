@@ -27,6 +27,7 @@ def main():
     parser.add_argument("--max_timesteps", type=int)
     parser.add_argument('--num_rollouts', type=int, default=20,
                         help='Number of expert roll outs')
+    parser.add_argument('--save', type=bool, default=False)
     args = parser.parse_args()
 
     print('loading and building expert policy')
@@ -67,11 +68,11 @@ def main():
         print('mean return', np.mean(returns))
         print('std of return', np.std(returns))
 
-        expert_data = {'observations': np.array(observations),
+        if args.save:
+            expert_data = {'observations': np.array(observations),
                        'actions': np.array(actions)}
-
-        with open(os.path.join('experts', args.envname + '-data.pkl'), 'wb') as f:
-            pickle.dump(expert_data, f, pickle.HIGHEST_PROTOCOL)
+            with open(os.path.join('experts', args.envname + '-data.pkl'), 'wb') as f:
+                pickle.dump(expert_data, f, pickle.HIGHEST_PROTOCOL)
 
 
 if __name__ == '__main__':
